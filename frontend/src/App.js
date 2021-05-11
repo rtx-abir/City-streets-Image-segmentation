@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 
 import './App.css';
 
@@ -19,12 +20,26 @@ function App() {
 
   const handlePrediction = e => {
     e.preventDefault();
+    
+    let form_data = new FormData();
 
-    setPredictedImage(
-      {url: URL.createObjectURL(image.raw)}
-    ) 
+    form_data.append('image', image.raw);
 
-    //MAKE FLASK POST REQ HERE//
+    let url = 'http://localhost:5000/predict';
+
+    axios.post(url, form_data, {
+      headers: {
+        'content-type': 'multipart/form-data',
+        'Access-Control-Allow-Origin': '*',
+      },
+      responseType: 'blob'
+    })
+        .then(res => {
+          setPredictedImage({url: res.data})
+          
+        })
+        .catch(err => console.log(err))
+    console.log(predictedImage)
   }
 
   return (
@@ -48,7 +63,7 @@ function App() {
         Original
       </div>
       {image.preview ? (
-        <img src={image.preview} alt="dummy" width="512" height="256" />
+        <img src={image.preview} alt="dummy" width="804" height="404" />
         ) : (
         <>
           <h5 className="text-center">Upload your photo</h5>
@@ -59,7 +74,7 @@ function App() {
       </div>
 
       {predictedImage.url ? (
-        <img src={predictedImage.url} alt="dummy" width="512" height="256" />
+        <img src={URL.createObjectURL(predictedImage.url)} alt="dummy"/>
         ) : (
         <>
           <h5 className="text-center">Waiting for prediction</h5>

@@ -3,62 +3,73 @@ from flask import Flask, request, jsonify, send_file
 import tensorflow
 from tensorflow.keras.models import load_model
 import efficientnet.keras as efn
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import cv2
 from PIL import Image
-from flask_cors import CORS
-
-
+from flask_cors import CORS, cross_origin
+import io
 
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app)
 
 model_fpn = load_model('fpn_model.h5',compile = False)
-#model_unet = pickle.load(open('unet.pkl','rb'))
-#model_multi = pickle.load(open('multi_fpn.pkl','rb'))
+
 model_fpn.compile()
 
 def visualize_superimpose_arrs(*args, plot_title, show_axis_labels = True):
   fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(8, 8))
-
+  fig.subplots_adjust(top=1, bottom=0, left=0, right=1)
   axes.imshow(cv2.cvtColor(args[0], cv2.COLOR_BGR2RGB))
   axes.imshow(args[1], alpha=.4)
-  #axes.set_title(plot_title[0])
   axes.get_xaxis().set_visible(show_axis_labels)
   axes.get_yaxis().set_visible(show_axis_labels)
-
+  fig = plt.gcf()
+  return fig
 
 def fig2img(fig):
     """Convert a Matplotlib figure to a PIL Image and return it"""
-    import io
+
     buf = io.BytesIO()
-    fig.savefig(buf)
+    fig.savefig(buf, bbox_inches='tight',pad_inches=0)
     buf.seek(0)
     img = Image.open(buf)
     return img
 
 
 @app.route('/predict',methods=['POST'])
+@cross_origin()
 def upload():
     try:
-        imagefile = request.files['imagefile']
+
+        imagefile = request.files['image'].read()
         print("image successfully uploaded")
-        img = cv2.imread(imagefile)
+
+        img = cv2.imdecode(np.fromstring(imagefile, np.uint8), cv2.IMREAD_UNCHANGED)
+
         img_resized = cv2.resize(img, (512,256))
         img_arr = np.zeros((1, 256, 512, 3), dtype=np.float32)
         img_arr[0] = img_resized / 255
         fpn_pred = model_fpn.predict(img_arr, verbose = 1).round()
+
         new_img = visualize_superimpose_arrs(
             img_arr[0],
             fpn_pred.squeeze(),
             plot_title = ['Original'],
             show_axis_labels = False
         )
+
         tempobj = fig2img(new_img)
-        response = send_file(tempobj, as_attachment=True, attachment_filename='prediction.png', mimetype='image/png')
+        imageio = io.BytesIO()
+        tempobj.save(imageio, "PNG", quality=85)
+        imageio.seek(0)
+        print(type(imageio))
+        response = send_file(imageio, as_attachment=True, attachment_filename='prediction.png', mimetype='image/png')
+        
         return response
     except Exception as err:
+        print('ERR',err)
+        print(str(request.files))
         print("no file recieved")
 
 if __name__ == "__main__":
