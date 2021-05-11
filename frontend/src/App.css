@@ -42,6 +42,7 @@
 
 .fileInput {
   color: white;
+  margin-right: 10px;
 }
 
 .pred-img {
@@ -50,4 +51,15 @@
   margin:auto;
   overflow: hidden;
   padding-bottom: 30px;
+}
+
+.submitButton {
+  margin-right: 30px;
+}
+
+.model-type-label {
+  color: white;
+  margin-right: 10px;
+  letter-spacing: -1px;
+  font-weight: 400;
 }
