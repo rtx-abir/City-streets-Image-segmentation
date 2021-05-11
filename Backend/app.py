@@ -24,6 +24,7 @@ def visualize_superimpose_arrs(*args, plot_title, show_axis_labels = True):
   axes.imshow(args[1], alpha=.4)
   axes.get_xaxis().set_visible(show_axis_labels)
   axes.get_yaxis().set_visible(show_axis_labels)
+  plt.axis('off')
   fig = plt.gcf()
   return fig
 
@@ -45,8 +46,10 @@ def upload():
         imagefile = request.files['image'].read()
         print("image successfully uploaded")
 
-        img = cv2.imdecode(np.fromstring(imagefile, np.uint8), cv2.IMREAD_UNCHANGED)
-
+        img = cv2.imdecode(np.frombuffer(imagefile, np.uint8), cv2.IMREAD_UNCHANGED)
+        print(img.shape)
+        if img.shape[2] == 4:
+            img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
         img_resized = cv2.resize(img, (512,256))
         img_arr = np.zeros((1, 256, 512, 3), dtype=np.float32)
         img_arr[0] = img_resized / 255
