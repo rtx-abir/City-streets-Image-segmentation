@@ -112,7 +112,7 @@ function App() {
             (null) 
             : 
             (<div className="Title">
-              Welcome To CityScapes Segmentation 
+              Test Our Segmentation Model 
             </div>)
             }
       <div className="Middle-bar" style={image.preview ? {width:'900px', margin:'auto', background: 'rgba(252, 252, 252, 0.5)', height: '100vh'}: null}>

@@ -28,6 +28,7 @@
   box-shadow: 0 5px 25px rgba(0,0,0,.5);
   color: #fff;
   border-width: 0px;
+  cursor: pointer;
 }
 
 .upload-form {
@@ -61,6 +62,7 @@
   background-color:  rgba(103, 78, 134, 0.89);
   box-shadow: 0 5px 25px rgba(0,0,0,.5);
   border-width: 0px;
+  cursor: pointer;
 }
 
 .preview-img {
@@ -69,11 +71,13 @@
 
 .start-pred-button {
   margin: 10px;
-  height: 50px;
+  height: 60px;
+  width: 130px;
   background-color: rgb(103, 78, 134);
   border-width: 0px;
   border-radius: 5px;
   box-shadow: 0 5px 25px rgba(0,0,0,.5);
+  cursor: pointer;
 }
 
 .start-pred-text {
@@ -86,7 +90,8 @@
   background-color:  rgba(103, 78, 134, 0.89);
   box-shadow: 0 5px 25px rgba(0,0,0,.5);
   border-width: 0px;
-  color: #fff
+  color: #fff;
+  cursor: pointer;
 }
 
 .model-type-text {
@@ -114,8 +119,8 @@
 }
 
 .Loading-Mesg {
-  color: green;
-  font-weight: 600;
+  color: rgb(57, 95, 57);
+  font-weight: 800;
   margin-bottom: 10px;
 }
 
@@ -159,7 +164,6 @@
   text-transform: uppercase;
   font-weight: bold;
   padding: 20px;
-  cursor: pointer;
   border-bottom: 1px solid rgba(255, 255, 255, 0.10);
 }
 .sidebarMenuInner li span{
