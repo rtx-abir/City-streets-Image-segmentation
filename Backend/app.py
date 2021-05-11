@@ -14,8 +14,10 @@ app = Flask(__name__)
 CORS(app)
 
 model_fpn = load_model('fpn_model.h5',compile = False)
+model_multi = load_model('fpn_multi_model.h5',compile = False)
 
 model_fpn.compile()
+model_multi.compile()
 
 def visualize_superimpose_arrs(*args, plot_title, show_axis_labels = True):
   fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(8, 8))
@@ -38,14 +40,14 @@ def fig2img(fig):
     return img
 
 
-@app.route('/predict',methods=['POST'])
+@app.route('/predict_fpn',methods=['POST'])
 @cross_origin()
 def upload():
     try:
-
+        # Getting the image
         imagefile = request.files['image'].read()
         print("image successfully uploaded")
-
+        print('running fpn')
         img = cv2.imdecode(np.frombuffer(imagefile, np.uint8), cv2.IMREAD_UNCHANGED)
         print(img.shape)
         if img.shape[2] == 4:
@@ -58,6 +60,47 @@ def upload():
         new_img = visualize_superimpose_arrs(
             img_arr[0],
             fpn_pred.squeeze(),
+            plot_title = ['Original'],
+            show_axis_labels = False
+        )
+
+        tempobj = fig2img(new_img)
+        imageio = io.BytesIO()
+        tempobj.save(imageio, "PNG", quality=85)
+        imageio.seek(0)
+        print(type(imageio))
+        response = send_file(imageio, as_attachment=True, attachment_filename='prediction.png', mimetype='image/png')
+        
+        return response
+    except Exception as err:
+        print('ERR',err)
+        print(str(request.files))
+        print("no file recieved")
+
+
+@app.route('/predict_multi',methods=['POST'])
+@cross_origin()
+def upload_multi():
+    try:
+        # Getting the image
+        imagefile = request.files['image'].read()
+        print("image successfully uploaded")
+        print('running multi')
+        img = cv2.imdecode(np.frombuffer(imagefile, np.uint8), cv2.IMREAD_UNCHANGED)
+
+        #changing the shape, if 4 channel make 3 channel
+        print(img.shape)
+        if img.shape[2] == 4:
+            img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+
+        img_resized = cv2.resize(img, (512,256))
+        img_arr = np.zeros((1, 256, 512, 3), dtype=np.float32)
+        img_arr[0] = img_resized / 255
+        fpn_multi_pred = model_multi.predict(img_arr, verbose = 1).round()
+
+        new_img = visualize_superimpose_arrs(
+            img_arr[0],
+            np.argmax(fpn_multi_pred[0], axis=2),            
             plot_title = ['Original'],
             show_axis_labels = False
         )

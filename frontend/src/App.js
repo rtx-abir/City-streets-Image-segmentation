@@ -30,7 +30,7 @@ function App() {
 
     form_data.append('image', image.raw);
 
-    let url = 'http://localhost:5000/predict';
+    let url = 'http://localhost:5000/predict_multi';
 
     if(modelType == "model_fpn_multi")
       url = url + "_multi"
