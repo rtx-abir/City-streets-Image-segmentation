@@ -69,9 +69,19 @@ function App() {
 
   return (
     <div className="App">
-      <div className="Title">
-        Test Our Model
-      </div>
+      <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu"/>
+        <label for="openSidebarMenu" class="sidebarIconToggle">
+          <div class="spinner diagonal part-1"></div>
+          <div class="spinner horizontal"></div>
+          <div class="spinner diagonal part-2"></div>
+        </label>
+        <div id="sidebarMenu">
+          <ul class="sidebarMenuInner">
+            <li>XYZ<span>test</span></li>
+            <li><a href="https://vanila.io" target="_blank">Company</a></li>
+            <li><a href="https://instagram.com/plavookac" target="_blank">Instagram</a></li>
+          </ul>
+        </div>
       <div className="Input-box">
         <input className="fileInput" 
           type="file" 
