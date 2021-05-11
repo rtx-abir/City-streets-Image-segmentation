@@ -110,7 +110,7 @@ function App() {
       )}
       {loading ? (
         <div className="Loading-Mesg">
-          Loading
+          Processing
         </div>
         ) : (
         <>
