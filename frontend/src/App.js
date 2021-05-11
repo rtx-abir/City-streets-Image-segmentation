@@ -24,7 +24,7 @@ function App() {
       {url: URL.createObjectURL(image.raw)}
     ) 
 
-    //MAKE FLASK POST REQ HERE??
+    //MAKE FLASK POST REQ HERE//
   }
 
   return (
@@ -57,7 +57,7 @@ function App() {
       <div className="original-text">
         Predicted
       </div>
-      
+
       {predictedImage.url ? (
         <img src={predictedImage.url} alt="dummy" width="512" height="256" />
         ) : (
