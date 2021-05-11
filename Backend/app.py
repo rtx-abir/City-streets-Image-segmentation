@@ -20,10 +20,12 @@ GPU power, we used collab to run and save the model and unloaded here.
 model_fpn = load_model('fpn_model.h5',compile = False)
 model_multi = load_model('fpn_multi_model.h5',compile = False)
 model_linknet = load_model('linknet_model.h5', compile = False)
+model_unet = load_model('unet_model.h5', compile = False)
 
 model_fpn.compile()
 model_multi.compile()
 model_linknet.compile()
+model_unet.compile()
 
 def visualize_superimpose_arrs(*args, plot_title, show_axis_labels = True):
   """
@@ -131,6 +133,14 @@ def upload_multi():
 @cross_origin()
 def upload_linknet():
     imageio = request_procedure(model_linknet, "linknet")
+    response = send_file(imageio, as_attachment=True, attachment_filename='prediction.png', mimetype='image/png')
+    return response
+
+
+@app.route('/predict_unet',methods=['POST'])
+@cross_origin()
+def upload_unet():
+    imageio = request_procedure(model_unet, "unet")
     response = send_file(imageio, as_attachment=True, attachment_filename='prediction.png', mimetype='image/png')
     return response
 
