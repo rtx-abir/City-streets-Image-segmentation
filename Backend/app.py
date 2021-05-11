@@ -6,10 +6,14 @@ import efficientnet.keras as efn
 import matplotlib as plt
 import cv2
 from PIL import Image
+from flask_cors import CORS
+
 
 
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 model_fpn = load_model('fpn_model.h5',compile = False)
 #model_unet = pickle.load(open('unet.pkl','rb'))
 #model_multi = pickle.load(open('multi_fpn.pkl','rb'))
