@@ -27,7 +27,8 @@ function App() {
   const handlePrediction = e => {
     e.preventDefault();
 
-    setErrMesg(""); 
+    setErrMesg("");
+    setLoading(true); 
 
     let form_data = new FormData();
 
@@ -57,9 +58,13 @@ function App() {
       })
       .then(res => {
         setPredictedImage({url: res.data});  
-        setErrMesg("");     
+        setErrMesg("");
+        setLoading(false);      
       })
-      .catch(err => {setErrMesg("Failed to predict")});
+      .catch(err => {
+        setErrMesg("Failed to predict");
+        setLoading(false);
+      });
   }
 
   return (
@@ -88,6 +93,14 @@ function App() {
       {errMesg ? (
         <div className="Err-Mesg">
           {errMesg}
+        </div>
+        ) : (
+        <>
+        </>
+      )}
+      {loading ? (
+        <div className="Loading-Mesg">
+          Loading
         </div>
         ) : (
         <>
