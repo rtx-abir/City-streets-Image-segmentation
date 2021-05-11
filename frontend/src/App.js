@@ -94,9 +94,9 @@ function App() {
         </button>
         <label for="model_type" className="model-type-label">Model Type:</label>
         <select name="model_type" onChange={handleDropdownChange}>
-          <option value="model_fpn">FPN</option>
-          <option value="model_unet">UNET</option>
-          <option value="model_linknet">LINKET</option>
+          <option value="model_fpn">FPN Binary</option>
+          <option value="model_unet">UNET Binary</option>
+          <option value="model_linknet">LINKET Binary</option>
           <option value="model_fpn_multi">FPN Multiclass</option>
         </select>
       </div>
