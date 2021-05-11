@@ -9,6 +9,7 @@ function App() {
   const [predictedImage, setPredictedImage] = useState({url: ""});
   const [loading, setLoading] = useState(false);
   const [modelType, setModelType] = useState("model_fpn");
+  const [errMesg, setErrMesg] = useState("");
 
   const handleImageChange = e => {
     if (e.target.files.length) {
@@ -25,12 +26,14 @@ function App() {
 
   const handlePrediction = e => {
     e.preventDefault();
-    
+
+    setErrMesg(""); 
+
     let form_data = new FormData();
 
     form_data.append('image', image.raw);
 
-    let url = 'http://localhost:5000/predict_multi';
+    let url = 'http://localhost:5000/predict';
 
     if(modelType == "model_fpn_multi")
       url = url + "_multi"
@@ -44,18 +47,19 @@ function App() {
     else
       url = url + "_linknet"
 
-    axios.post(url, form_data, {
-      headers: {
-        'content-type': 'multipart/form-data',
-        'Access-Control-Allow-Origin': '*',
-      },
-      responseType: 'blob'
-    })
-        .then(res => {
-          setPredictedImage({url: res.data})
-          
-        })
-        .catch(err => console.log(err))
+    axios
+      .post(url, form_data, {
+        headers: {
+          'content-type': 'multipart/form-data',
+          'Access-Control-Allow-Origin': '*',
+        },
+        responseType: 'blob'
+      })
+      .then(res => {
+        setPredictedImage({url: res.data});  
+        setErrMesg("");     
+      })
+      .catch(err => {setErrMesg("Failed to predict")});
   }
 
   return (
@@ -81,6 +85,14 @@ function App() {
           <option value="model_fpn_multi">FPN Multiclass</option>
         </select>
       </div>
+      {errMesg ? (
+        <div className="Err-Mesg">
+          {errMesg}
+        </div>
+        ) : (
+        <>
+        </>
+      )}
       <div className="original-text">
         Original
       </div>
@@ -94,7 +106,6 @@ function App() {
       <div className="original-text">
         Predicted
       </div>
-
       {predictedImage.url ? (
         <div className="predicted-trim">
           <img src={URL.createObjectURL(predictedImage.url)} alt="dummy" className="pred-img"/>

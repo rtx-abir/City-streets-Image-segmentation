@@ -14,7 +14,7 @@
 .Input-box {
   height: 25px;
   padding-top: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   width: 50%;
   margin: auto;
   justify-content: center
@@ -36,7 +36,7 @@
 .original-text {
   font-size: 20px;
   color: white;
-  font-weight: 800px;
+  font-weight: 600;
   margin-bottom: 10px;
 }
 
@@ -62,4 +62,9 @@
   margin-right: 10px;
   letter-spacing: -1px;
   font-weight: 400;
+}
+
+.Err-Mesg {
+  color: red;
+  font-weight: 600;
 }
