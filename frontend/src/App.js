@@ -63,7 +63,7 @@ function App() {
         Original
       </div>
       {image.preview ? (
-        <img src={image.preview} alt="dummy" width="804" height="404" />
+        <img src={image.preview} alt="dummy" width="800" height="400" />
         ) : (
         <>
           <h5 className="text-center">Upload your photo</h5>
@@ -74,7 +74,9 @@ function App() {
       </div>
 
       {predictedImage.url ? (
-        <img src={URL.createObjectURL(predictedImage.url)} alt="dummy"/>
+        <div className="predicted-trim">
+          <img src={URL.createObjectURL(predictedImage.url)} alt="dummy" className="pred-img"/>
+        </div>
         ) : (
         <>
           <h5 className="text-center">Waiting for prediction</h5>

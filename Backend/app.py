@@ -24,6 +24,7 @@ def visualize_superimpose_arrs(*args, plot_title, show_axis_labels = True):
   axes.imshow(args[1], alpha=.4)
   axes.get_xaxis().set_visible(show_axis_labels)
   axes.get_yaxis().set_visible(show_axis_labels)
+  plt.axis('off')
   fig = plt.gcf()
   return fig
 

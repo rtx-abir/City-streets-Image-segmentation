@@ -43,3 +43,11 @@
 .fileInput {
   color: white;
 }
+
+.pred-img {
+  width: 800;
+  height: 400;
+  margin:auto;
+  overflow: hidden;
+  padding-bottom: 30px;
+}
