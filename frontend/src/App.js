@@ -25,7 +25,7 @@ function App() {
 
     form_data.append('image', image.raw);
 
-    let url = 'http://localhost:5000/predict';
+    let url = 'http://localhost:5000/predict_multi';
 
     axios.post(url, form_data, {
       headers: {
