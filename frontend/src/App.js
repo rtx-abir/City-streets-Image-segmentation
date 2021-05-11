@@ -74,6 +74,9 @@ function App() {
 
   return (
     <div className="App">
+      <div className='github-link'>
+        <a className='github-link-a' href="https://github.com/rtx-abir/City-streets-Image-segmentation">/Github/</a>
+      </div>
         <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu" onClick={handleSideBarClick}/>
           <label for="openSidebarMenu" class="sidebarIconToggle" ref={sidebarRef}>
             <div class="spinner diagonal part-1"></div>
