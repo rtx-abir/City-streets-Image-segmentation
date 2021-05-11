@@ -15,9 +15,11 @@ CORS(app)
 
 model_fpn = load_model('fpn_model.h5',compile = False)
 model_multi = load_model('fpn_multi_model.h5',compile = False)
+model_linknet = load_model('linknet_model.h5', compile = False)
 
 model_fpn.compile()
 model_multi.compile()
+model_linknet.compile()
 
 def visualize_superimpose_arrs(*args, plot_title, show_axis_labels = True):
   fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(8, 8))
@@ -118,5 +120,46 @@ def upload_multi():
         print(str(request.files))
         print("no file recieved")
 
+
+
+@app.route('/predict_linknet',methods=['POST'])
+@cross_origin()
+def upload_linknet():
+    try:
+        # Getting the image
+        imagefile = request.files['image'].read()
+        print("image successfully uploaded")
+        print('running multi')
+        img = cv2.imdecode(np.frombuffer(imagefile, np.uint8), cv2.IMREAD_UNCHANGED)
+
+        #changing the shape, if 4 channel make 3 channel
+        print(img.shape)
+        if img.shape[2] == 4:
+            img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+
+        img_resized = cv2.resize(img, (512,256))
+        img_arr = np.zeros((1, 256, 512, 3), dtype=np.float32)
+        img_arr[0] = img_resized / 255
+        fpn_multi_pred = model_linknet.predict(img_arr, verbose = 1).round()
+
+        new_img = visualize_superimpose_arrs(
+            img_arr[0],
+            fpn_multi_pred.squeeze(),          
+            plot_title = ['Original'],
+            show_axis_labels = False
+        )
+
+        tempobj = fig2img(new_img)
+        imageio = io.BytesIO()
+        tempobj.save(imageio, "PNG", quality=85)
+        imageio.seek(0)
+        print(type(imageio))
+        response = send_file(imageio, as_attachment=True, attachment_filename='prediction.png', mimetype='image/png')
+        
+        return response
+    except Exception as err:
+        print('ERR',err)
+        print(str(request.files))
+        print("no file recieved")
 if __name__ == "__main__":
     app.run(debug=True)
