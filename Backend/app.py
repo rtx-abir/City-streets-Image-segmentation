@@ -10,22 +10,27 @@ from flask_cors import CORS, cross_origin
 import io
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../frontend/build', static_url_path='/' )
 CORS(app)
+
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
 
 """
 These .h5 files are recieved by running the models from our collab notebook. As we didn't have sufficient
 GPU power, we used collab to run and save the model and unloaded here.
 """
 model_fpn = load_model('fpn_model.h5',compile = False)
-model_multi = load_model('fpn_multi_model.h5',compile = False)
-model_linknet = load_model('linknet_model.h5', compile = False)
-model_unet = load_model('unet_model.h5', compile = False)
+#model_multi = load_model('fpn_multi_model.h5',compile = False)
+#model_linknet = load_model('linknet_model.h5', compile = False)
+#model_unet = load_model('unet_model.h5', compile = False)
 
 model_fpn.compile()
-model_multi.compile()
-model_linknet.compile()
-model_unet.compile()
+#model_multi.compile()
+#model_linknet.compile()
+#model_unet.compile()
 
 def visualize_superimpose_arrs(*args, plot_title, show_axis_labels = True):
   """
@@ -147,4 +152,4 @@ def upload_unet():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
